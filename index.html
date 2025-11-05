@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Happy Birthday Ella!</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
+  </head>
+  <body>
+    <script>
+      let snake = [];
+      let message = "Happy Birthday Ella!";
+      let font;
+      let pathPoints = [];
+      let t = 0;
+      const snakeLength = 100;
+
+      function preload() {
+        font = loadFont("https://cdnjs.cloudflare.com/ajax/libs/topcoat/0.8.0/font/SourceCodePro-Regular.otf");
+      }
+
+      function setup() {
+        createCanvas(800, 300);
+        noStroke();
+        textFont(font);
+        textSize(80);
+        fill(255);
+
+        // Get the text outline
+        let points = font.textToPoints(message, 40, 180, 80, {
+          sampleFactor: 0.15, // controls curve smoothness
+          simplifyThreshold: 0
+        });
+        pathPoints = points;
+        frameRate(60);
+      }
+
+      function draw() {
+        background(10, 20, 40);
+
+        // Move along the path
+        let idx = floor(t) % pathPoints.length;
+        let pos = pathPoints[idx];
+        snake.push({ x: pos.x, y: pos.y });
+
+        if (snake.length > snakeLength) snake.shift();
+
+        // Draw snake
+        for (let i = 0; i < snake.length; i++) {
+          let seg = snake[i];
+          let sz = map(i, 0, snake.length, 8, 20);
+          let hue = map(i, 0, snake.length, 100, 200);
+          fill(100, 255 - i * 2, 100 + i * 2);
+          ellipse(seg.x, seg.y + sin(i * 0.3 + frameCount * 0.1) * 5, sz);
+        }
+
+        // Add sparkle particles for fun
+        for (let i = 0; i < 5; i++) {
+          let sparkleX = random(width);
+          let sparkleY = random(height);
+          stroke(255, 255, 200, 150);
+          point(sparkleX, sparkleY);
+        }
+
+        noStroke();
+        t += 0.7;
+      }
+    </script>
+  </body>
+</html>
